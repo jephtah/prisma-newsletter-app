@@ -78,7 +78,7 @@ If deployed to production:
 
 ---
 
-## 🧪 Test the Flow
+## Test the Flow
 
 1. **Subscribe** on the homepage
 2. **Create a new post** in `/admin/new`
