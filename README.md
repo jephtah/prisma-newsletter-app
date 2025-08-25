@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Newsletter App
 
-## Getting Started
+A simple full-stack newsletter platform built with Next.js 14, TypeScript, Prisma, and PostgreSQL.
+Supports authoring posts, public reading, subscriber management, scheduling, and mocked email notifications.
 
-First, run the development server:
+---
+
+## Quick Start
 
 ```bash
+# Install deps
+npm install
+
+# DB setup (adjust creds as needed)
+echo 'DATABASE_URL="postgresql://username:password@localhost:5432/newsletter_db"' > .env
+
+# Run migrations + seed
+npx prisma migrate dev --name init
+npx prisma db seed
+
+# Start dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Homepage** → http://localhost:3000
+- **Admin** → http://localhost:3000/admin
+- **Subscribers** → http://localhost:3000/admin/subscribers
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features
 
-## Learn More
+- **Post authoring** (create, edit, delete, schedule)
+- **Public post viewing** with SEO-friendly slugs
+- **Newsletter subscription flow**
+- **Scheduled publishing**
+- **Email notifications** (mocked – logs to console)
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Next.js 14** → App Router, SSR for public pages, API routes for backend logic
+- **Prisma** → type-safe DB access, migrations, and schema clarity
+- **PostgreSQL** → reliable relational store for posts + subscribers
+- **Tailwind CSS** → quick styling without heavy design effort
+- **TypeScript** → maintainable, safe code
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Trade-offs
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Emails mocked** → console logs instead of real provider (SendGrid/Postmark would slot in easily).
+- **No auth** → out of scope per assignment. Admin pages assume trusted access.
+- **CSR for admin** → better UX for forms; SEO not required.
+- **Inline email sending** → no job queue. Fine for demo; would use Redis + BullMQ in production.
+
+---
+
+## Future Improvements
+
+- **Auth with NextAuth.js**
+- **Real transactional email integration**
+- **Background jobs for bulk delivery**
+- **Unsubscribe management + better templates**
+- **Analytics** (opens, clicks, subscriber growth)
+
+---
+
+## Deployment Notes
+
+If deployed to production:
+- **Vercel** for hosting (optimal for Next.js)
+- **Supabase / Neon** for managed PostgreSQL
+- **SendGrid / Postmark** for email
+- **Redis + BullMQ** for job queue
+- **Sentry** for error monitoring
+
+---
+
+## 🧪 Test the Flow
+
+1. **Subscribe** on the homepage
+2. **Create a new post** in `/admin/new`
+3. **Publish** → check console for mocked email logs
+4. **Schedule a future post** → then call `/api/posts/scheduled` to trigger delivery
